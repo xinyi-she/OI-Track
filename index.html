@@ -52,10 +52,12 @@ header p{font-size:13px;color:var(--text-2)}
 .form-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
 .field{display:flex;flex-direction:column;gap:6px}
 .field label{font-size:12.5px;color:var(--text-2);font-weight:600}
-.field input[type="date"],.field select{
+.field label .opt{font-size:11px;font-weight:500;color:#94a3b8}
+.field input[type="date"],.field select,.field input[type="text"]{
   height:40px;padding:0 10px;border:1px solid var(--border);border-radius:10px;
   font-size:14px;color:var(--text);background:#fbfcfe;outline:none;transition:.15s;
 }
+.field input[type="text"]{width:200px}
 .field input:focus,.field select:focus{border-color:var(--primary-2);background:#fff;box-shadow:0 0 0 3px rgba(99,102,241,.12)}
 /* 单选「是/否」做成分段控件 */
 .seg{display:flex;background:#eef1f7;border-radius:10px;padding:3px;height:40px}
@@ -205,15 +207,158 @@ footer b{color:var(--text-2)}
 .tool-export:hover{background:var(--blue);border-color:var(--blue)}
 .tool-import:hover{background:var(--green);border-color:var(--green)}
 .tool-btn:active{transform:translateY(0)}
+/* ========== 记录行：题号 ========== */
+.rec-pid{
+  font-family:ui-monospace,SFMono-Regular,Consolas,"Courier New",monospace;
+  font-size:12px;font-weight:700;color:#0f766e;background:#ccfbf1;
+  padding:2px 9px;border-radius:7px;flex:none;max-width:150px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:default;
+}
+/* ========== 分页控件 ========== */
+.pager{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin-top:14px;padding-top:12px;border-top:1px dashed var(--border);
+}
+.pager[hidden]{display:none}
+.pg-btn{
+  height:32px;padding:0 14px;border-radius:8px;font-size:13px;font-weight:700;
+  border:1px solid var(--border);background:#fff;color:var(--primary);
+  cursor:pointer;transition:.15s;font-family:inherit;display:inline-flex;align-items:center;gap:4px;
+}
+.pg-btn:hover:not(:disabled){background:var(--blue-bg);border-color:#93c5fd}
+.pg-btn:disabled{opacity:.4;cursor:not-allowed}
+.pg-info{font-size:13px;color:var(--text-2);font-weight:600}
 @media(max-width:640px){
   .field{width:100%}
-  .field input[type="date"],.field select{width:100%}
+  .field input[type="date"],.field select,.field input[type="text"]{width:100%}
   .submit-btn{width:100%;justify-content:center}
   .rec .rec-date{min-width:auto}
   .ov-card .v{font-size:26px}
   .tool-btns{width:100%}
   .tool-btn{flex:1;justify-content:center}
+  .rec-pid{max-width:96px}
 }
+/* ================================================================
+ * （新增）主题语义化变量 + 夜间/白天切换
+ * 用法：<html data-theme="light|dark">，默认 light；状态存 localStorage
+ * ================================================================ */
+:root{
+  --input-bg:#fbfcfe; --soft:#f8fafc; --track:#eef1f7; --hover-bg:#f1f5f9;
+  --chart-grid:#eef1f7; --chart-tick:#64748b; --chart-legend:#334155;
+  --hm-track:#e8edf5; --hm-text:#94a3b8;
+}
+html[data-theme="dark"]{
+  --bg:#0c1425; --card:#141f37; --border:#26385c; --text:#e7eef9; --text-2:#8fa3c4;
+  --input-bg:#0b1322; --soft:#101a30; --track:#1b2a49; --hover-bg:#22345a;
+  --blue:#93c5fd; --blue-bg:rgba(96,165,250,.15);
+  --green:#86efac; --green-bg:rgba(74,222,128,.15);
+  --amber:#fcd34d; --amber-bg:rgba(251,191,36,.16);
+  --red:#fca5a5;  --red-bg:rgba(248,113,113,.16);
+  --chart-grid:#23345a; --chart-tick:#8fa3c4; --chart-legend:#e7eef9;
+  --hm-track:#1c2a49; --hm-text:#7d90b0;
+}
+/* —— 夜间模式：对早期写死的浅色表面做兜底覆盖 —— */
+html[data-theme="dark"] body{background:var(--bg);color:var(--text)}
+html[data-theme="dark"] .field input[type="date"],
+html[data-theme="dark"] .field input[type="text"],
+html[data-theme="dark"] .field input[type="number"],
+html[data-theme="dark"] .field select{background:var(--input-bg);color:var(--text);border-color:var(--border)}
+html[data-theme="dark"] .field input:focus,html[data-theme="dark"] .field select:focus{background:var(--card);box-shadow:0 0 0 3px rgba(129,140,248,.18)}
+html[data-theme="dark"] .range-select{background:var(--card);color:var(--text);border-color:var(--border)}
+html[data-theme="dark"] .seg,html[data-theme="dark"] .seg-range{background:var(--track)}
+html[data-theme="dark"] .seg input:checked + label,html[data-theme="dark"] .seg-range button.active{background:var(--card);color:var(--green)}
+html[data-theme="dark"] .hint{background:var(--soft)}
+html[data-theme="dark"] .group-head td{background:var(--soft)}
+html[data-theme="dark"] tfoot td{background:var(--soft)}
+html[data-theme="dark"] .band-row td{border-top-color:var(--border);color:var(--text-2)}
+html[data-theme="dark"] .band-row .cnt{color:var(--text)}
+html[data-theme="dark"] .rate-bar,html[data-theme="dark"] .rate-bar i{background:var(--track)}
+html[data-theme="dark"] .rate-bar i{background:var(--primary-2)}
+html[data-theme="dark"] .ov-card,.rec,.del-btn,.pg-btn,.tool-btn,.m-btn{background:var(--card)}
+html[data-theme="dark"] .pg-btn{color:#a5b4fc}
+html[data-theme="dark"] .rec:hover{border-color:#3a5283;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+html[data-theme="dark"] .del-btn:hover{background:var(--red-bg);border-color:rgba(248,113,113,.4)}
+html[data-theme="dark"] .m-btn{color:var(--text-2);border-color:var(--border)}
+html[data-theme="dark"] .m-btn:hover{background:var(--hover-bg)}
+html[data-theme="dark"] .m-msg{color:#c6d4ea}
+html[data-theme="dark"] .modal .m-msg b{color:var(--text)}
+html[data-theme="dark"] .rec-pid{background:rgba(45,212,191,.16);color:#5eead4}
+html[data-theme="dark"] .empty-state,.list-meta{color:var(--text-2)}
+html[data-theme="dark"] ::-webkit-scrollbar-thumb{background:#3a5283}
+html[data-theme="dark"] ::-webkit-scrollbar-track{background:transparent}
+/* ================================================================
+ * （新增）组件：主题切换按钮 / 标签选择器 / 筛选chips / 热力图 / 用时与板块行
+ * ================================================================ */
+/* 主题切换按钮（右上角） */
+.theme-btn{
+  margin-left:auto;flex:none;width:40px;height:40px;border-radius:12px;cursor:pointer;
+  border:1px solid var(--border);background:var(--card);color:var(--text);
+  font-size:18px;transition:.2s;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;
+}
+.theme-btn:hover{transform:translateY(-1px) rotate(12deg)}
+/* 表单里的板块多选（可点选多个） */
+.tagpick{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.tag-opt{
+  border:1px solid var(--border);background:var(--card);color:var(--text-2);
+  padding:7px 12px;border-radius:99px;font-size:12.5px;font-weight:700;cursor:pointer;
+  transition:.15s;font-family:inherit;user-select:none;display:inline-flex;align-items:center;gap:4px;
+}
+.tag-opt:hover{border-color:var(--primary-2);color:var(--primary)}
+.tag-opt.on{background:linear-gradient(135deg,#6366f1,#4f46e5);border-color:transparent;color:#fff;box-shadow:0 2px 8px rgba(99,102,241,.35)}
+/* 筛选卡片布局 */
+.filter-grid{display:grid;grid-template-columns:minmax(220px,auto) 1fr minmax(200px,auto);gap:16px;align-items:start}
+.f-group{display:flex;flex-direction:column;gap:8px;min-width:0}
+.f-label{font-size:12px;color:var(--text-2);font-weight:700;letter-spacing:.5px}
+.fchips{display:flex;flex-wrap:wrap;gap:7px}
+.fchip{
+  border:1px solid var(--border);background:var(--card);color:var(--text-2);
+  padding:6px 12px;border-radius:99px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s;
+  font-family:inherit;user-select:none;line-height:1.4;
+}
+.fchip:hover{border-color:var(--primary-2);color:var(--primary)}
+.fchip.on{background:var(--primary-2);border-color:var(--primary-2);color:#fff;font-weight:700}
+/* 记录行：板块文字 / 用时 */
+.rec-tags{font-size:12px;color:var(--text-2);flex:none;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec-tags b{color:var(--text-2);font-weight:500}
+.rec-tags.none{color:#cbd5e1}
+.rec-mins{
+  flex:none;font-size:12px;font-weight:700;color:#0e7490;background:#cffafe;
+  padding:3px 10px;border-radius:99px;display:inline-flex;align-items:center;gap:3px;
+}
+html[data-theme="dark"] .rec-tags,.rec-tags.none{color:#7d90b0}
+html[data-theme="dark"] .rec-mins{background:rgba(34,211,238,.16);color:#67e8f9}
+/* 热力图 */
+.heat-tip{font-size:12px;color:var(--text-2);margin:-4px 0 12px}
+.heat-wrap{overflow-x:auto;padding-bottom:4px}
+.heat-flex{display:inline-flex;gap:5px;align-items:flex-start}
+.heat-week{display:flex;flex-direction:column;gap:5px}
+.heat-labels{display:flex;flex-direction:column;gap:5px;margin-right:6px}
+.heat-labels span{height:13px;font-size:9.5px;color:var(--hm-text);display:flex;align-items:center}
+.heat-cell{width:13px;height:13px;border-radius:3px;transition:.12s}
+.heat-cell:hover{outline:2px solid var(--text-2);outline-offset:1px;transform:scale(1.15)}
+.heat-legend{display:flex;align-items:center;gap:5px;margin-top:10px;font-size:11.5px;color:var(--text-2);justify-content:flex-end}
+.heat-legend .sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+/* 用时图空态与独立率图共用 .chart-empty/.chart-box */
+@media(max-width:860px){
+  .filter-grid{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .rec-tags{max-width:110px}
+  .theme-btn{width:36px;height:36px}
+}
+/* ========== 热力图时段扩展（月份标签 / 长时段紧凑格） ========== */
+.bar-right{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+.heat-monthrow{display:flex;height:14px}
+.heat-monthrow span{flex:none;text-align:left;color:var(--hm-text);font-size:8.5px;line-height:14px;overflow:visible}
+/* 默认 13px 格：格宽 18（13+5）*/
+.heat-monthrow span{width:18px}
+/* 紧凑模式（1 年）：11px 格 + 3px 间距 */
+.hm-sm .heat-monthrow span{width:14px}
+.hm-sm .heat-cell{width:11px;height:11px;border-radius:2px}
+.hm-sm .heat-week,.hm-sm .heat-labels{gap:3px}
+.hm-sm .heat-labels span{height:11px;font-size:8.5px}
+.hm-sm .heat-labels{margin-right:4px}
+.hm-sm .heat-wrap{transform-origin:left center}
 </style>
 </head>
 <body>
@@ -226,6 +371,8 @@ footer b{color:var(--text-2)}
       <h1>算法刷题记录 · 独立做出率统计</h1>
       <p>记录每天的刷题情况，追踪「完全靠自己 AC」的成长曲线</p>
     </div>
+    <!-- 夜间/白天模式切换（图标由 JS 切换，状态存 localStorage） -->
+    <button class="theme-btn" id="theme-btn" type="button" title="切换夜间/白天模式">🌙</button>
   </header>
 
   <!-- ================= 添加记录 ================= -->
@@ -241,6 +388,17 @@ footer b{color:var(--text-2)}
         <select id="inp-diff"></select>
       </div>
       <div class="field">
+        <label for="inp-pid">题号 <span class="opt">(可选)</span></label>
+        <input type="text" id="inp-pid" placeholder="如 P1001 / CF1234A / ABC123"
+               maxlength="64" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field">
+        <!-- 用时（分钟）：整数、可留空。独立做出=是 → 做出时间；=否 → 思考时间 -->
+        <label for="inp-mins">用时（分钟）<span class="opt">(可选)</span></label>
+        <input type="number" id="inp-mins" min="0" max="100000" step="1"
+               placeholder="整数，可留空" inputmode="numeric">
+      </div>
+      <div class="field">
         <label>是否独立做出</label>
         <div class="seg" id="seg-solved">
           <input type="radio" name="solved" value="1" id="solved-yes" checked>
@@ -251,8 +409,45 @@ footer b{color:var(--text-2)}
       </div>
       <button class="submit-btn" id="btn-add">＋ 保存记录</button>
     </div>
+    <!-- 板块（多选，可同时属于多个板块；不选则记为“未标注”空数组） -->
+    <div class="form-row" style="margin-top:12px">
+      <div class="field" style="flex:1;min-width:260px">
+        <label>板块 <span class="opt">(可多选)</span></label>
+        <div class="tagpick" id="tagpick"></div>
+      </div>
+    </div>
     <div class="hint">
-      判定标准：<b>「是」</b>＝不借助题解、标签、他人提示，完全靠自己思考并写出正确代码；<b>「否」</b>＝未做出，或借助了外部帮助后才做出。
+      判定标准：<b>「是」</b>＝不借助题解、标签、他人提示，完全靠自己思考并写出正确代码；<b>「否」</b>＝未做出，或借助了外部帮助后才做出。<br>
+      <b>用时</b>：选择「是」时填写的是<b>做出时间</b>，选择「否」时填写的是<b>思考时间</b>；留空则不参与统计。
+    </div>
+  </section>
+
+  <!-- ================= 三级筛选（时间 / 板块多选 OR / 难度） ================= -->
+  <!-- 作用于：统计总览、独立做出率趋势、用时趋势、日历热力图、难度分组表、全部记录列表 -->
+  <section class="card">
+    <div class="section-bar">
+      <h2><span class="dot"></span>筛选条件</h2>
+      <span class="f-label" id="filter-summary"></span>
+    </div>
+    <div class="filter-grid">
+      <div class="f-group">
+        <span class="f-label">时间范围</span>
+        <div class="seg-range" id="range-seg">
+          <button data-days="7">最近7天</button>
+          <button data-days="30" class="active">最近30天</button>
+          <button data-days="90">最近90天</button>
+        </div>
+      </div>
+      <div class="f-group">
+        <span class="f-label">板块（可多选，任一命中即符合 OR）</span>
+        <!-- 板块 chips：含“全部”；多选由 JS 依据 TAGS 生成并维护 FS.tags -->
+        <div class="fchips" id="f-tags"></div>
+      </div>
+      <div class="f-group">
+        <span class="f-label">难度</span>
+        <!-- 难度单选：全部 / 14 个具体档位（选项由 JS 生成） -->
+        <select id="f-diff" class="range-select" style="max-width:none;width:100%;min-width:0"></select>
+      </div>
     </div>
   </section>
 
@@ -260,12 +455,6 @@ footer b{color:var(--text-2)}
   <section class="card">
     <div class="section-bar">
       <h2><span class="dot"></span>统计总览</h2>
-      <!-- 时间范围切换 -->
-      <div class="seg-range" id="range-seg">
-        <button data-days="7">最近7天</button>
-        <button data-days="30" class="active">最近30天</button>
-        <button data-days="90">最近90天</button>
-      </div>
     </div>
     <div class="ov-grid">
       <div class="ov-card ov-blue">
@@ -286,22 +475,58 @@ footer b{color:var(--text-2)}
     </div>
   </section>
 
-  <!-- ================= 趋势图 ================= -->
+  <!-- ================= 独立做出率趋势图（受上方三级筛选影响） ================= -->
   <section class="card">
     <div class="section-bar">
       <h2><span class="dot"></span>独立做出率趋势</h2>
-      <!-- 难度档位筛选：全部 / 洛谷青 / 洛谷蓝 / … / AT 3200+（选项由 JS 生成） -->
-      <select id="filter-seg" class="range-select" title="选择要查看趋势的难度档位"></select>
     </div>
-    <!-- 当前图表口径说明 -->
     <div class="chart-scope" id="chart-scope"></div>
     <div class="chart-box" id="chart-box">
       <canvas id="rate-chart"></canvas>
     </div>
     <div class="chart-empty" id="chart-empty" style="display:none">
       <span class="big">📭</span>
-      <span>当前时间范围内暂无做题记录，先去上面添加一条吧</span>
+      <span>当前筛选条件下暂无做题记录</span>
     </div>
+  </section>
+
+  <!-- ================= 用时趋势图（分钟，受上方三级筛选影响） ================= -->
+  <!-- 蓝色线：每日平均“做出时间”（独立做出=是 且有用时）；橙色线：每日平均“思考时间”（独立做出=否 且有用时） -->
+  <section class="card">
+    <div class="section-bar">
+      <h2><span class="dot"></span>用时趋势（分钟）</h2>
+    </div>
+    <div class="chart-scope" id="time-scope"></div>
+    <div class="chart-box" id="chart-box2">
+      <canvas id="time-chart"></canvas>
+    </div>
+    <div class="chart-empty" id="time-empty" style="display:none">
+      <span class="big">⏱️</span>
+      <span>当前筛选条件下没有带用时的记录</span>
+    </div>
+  </section>
+
+  <!-- ================= 日历热力图（GitHub 贡献图风格，受上方三级筛选影响） ================= -->
+  <section class="card">
+    <div class="section-bar">
+      <h2><span class="dot"></span>日历热力图</h2>
+      <!-- 右侧控件：时段切换（独立于上方时间筛选，便于看长周期）+ 指标切换 -->
+      <div class="bar-right">
+        <!-- 热力图时段：默认 6月(180天)，不随上方时间范围按钮变化 -->
+        <div class="seg-range" id="heat-range">
+          <button data-days="30">1月</button>
+          <button data-days="90">3月</button>
+          <button data-days="180" class="active">6月</button>
+          <button data-days="365">1年</button>
+        </div>
+        <div class="seg-range" id="heat-tabs">
+          <button data-metric="total" class="active">每日做题数</button>
+          <button data-metric="solved">独立做出数</button>
+        </div>
+      </div>
+    </div>
+    <div class="heat-tip" id="heat-tip"></div>
+    <div class="heat-wrap" id="heatmap"></div>
   </section>
 
   <!-- ================= 按难度段分组统计 ================= -->
@@ -334,6 +559,12 @@ footer b{color:var(--text-2)}
     <input type="file" id="file-import" accept=".json,application/json" hidden>
     <div class="list-meta" id="list-meta"></div>
     <div class="records" id="records"></div>
+    <!-- 分页控件：记录超过一页(20条)时显示，由 renderList() 控制显隐与禁用态 -->
+    <div class="pager" id="list-pager" hidden>
+      <button class="pg-btn" type="button" data-nav="prev">‹ 上一页</button>
+      <span class="pg-info" id="pg-info"></span>
+      <button class="pg-btn" type="button" data-nav="next">下一页 ›</button>
+    </div>
   </section>
 
   <!-- ================= 数据重置（性能测试辅助） ================= -->
@@ -370,6 +601,16 @@ footer b{color:var(--text-2)}
  * 一、常量与难度定义
  * ================================================================ */
 const STORAGE_KEY = 'contestSolveTracker.records.v1';
+const THEME_KEY = 'contestSolveTracker.theme';   // 夜间/白天模式持久化键名
+
+// 板块固定选项（表单多选 + 筛选共用）
+const TAGS = ['数据结构', '图论', '动态规划', '数学', '字符串', '构造/思维/其他'];
+// 旧数据 / 导入旧备份缺少板块字段时的默认板块（按需求规定）
+const DEFAULT_TAGS = ['构造/思维/其他'];
+
+// 记录列表分页参数（仅影响「全部记录」列表，不参与统计/图表）
+const PAGE_SIZE = 20; // 每页显示条数
+let recordsPage = 1;  // 当前页码（从 1 开始）
 
 // 全部难度选项（顺序即表单展示顺序）
 // 注意：CF / AT 的高分段已按用户要求拆分为「2900-3199」与「3200+」
@@ -392,12 +633,45 @@ const GROUPS = [
 /* ================================================================
  * 二、数据层（localStorage 持久化）
  * ================================================================ */
+/**
+ * 板块归一化：只保留固定选项内的板块（去重）。
+ * 传入非数组（如旧数据缺失）→ 返回默认板块；传入数组 → 过滤后保留（允许空数组=未标注）。
+ */
+function normTags(v) {
+  if (!Array.isArray(v)) return DEFAULT_TAGS.slice();
+  const keep = v.filter(t => typeof t === 'string' && TAGS.includes(t));
+  return Array.from(new Set(keep));
+}
+
+/** 用时归一化：仅接受 >=0 的整数分钟；其余（缺失/空/小数/文本）一律视为 null（不参与统计） */
+function normMins(v) {
+  return (typeof v === 'number' && Number.isInteger(v) && v >= 0 && v < 100000) ? v : null;
+}
+
+/**
+ * 记录结构归一化（载入 / 导入共用）：
+ * pid 缺省为空串；tags 缺省为 DEFAULT_TAGS；mins 缺省为 null。
+ */
+function normalizeRecord(r) {
+  return {
+    id: r.id || genId(),
+    date: r.date,
+    difficulty: r.difficulty,
+    solved: !!r.solved,
+    pid: typeof r.pid === 'string' ? r.pid.trim() : (r.pid == null ? '' : String(r.pid).trim()),
+    tags: r.tags === undefined ? DEFAULT_TAGS.slice() : normTags(r.tags),
+    mins: r.mins === undefined ? null : normMins(r.mins)
+  };
+}
+
 function loadRecords() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const arr = raw ? JSON.parse(raw) : [];
-    // 简单数据清洗：只保留结构合法的记录
-    return arr.filter(r => r && r.date && r.difficulty && r.solved !== undefined);
+    // 简单数据清洗：只保留结构合法的记录；再统一补全新字段默认值
+    return arr
+      .filter(r => r && r.date && r.difficulty && r.solved !== undefined)
+      .map(normalizeRecord);
   } catch (e) { return []; }
 }
 let records = loadRecords();
@@ -438,7 +712,7 @@ function pct(solved, total) {
 }
 
 /* ================================================================
- * 三、筛选与统计
+ * 三、三级筛选与统计（时间范围 × 板块多选 OR × 难度单选）
  * ================================================================ */
 
 /**
@@ -459,26 +733,70 @@ function inRange(rec, days) {
 }
 
 /**
- * 依据时间范围 + 难度档位过滤并计算统计摘要。
- * @param days   时间范围天数（7/30/90）
- * @param filter 难度档位（精确匹配，如 '洛谷青' / 'CF 2000-2299'）；
- *               'ALL' 表示不限制（汇总所有档位）
- * @returns { total, solved, rate, byDay, rs } rs 为过滤后的原始记录
+ * 筛选状态（三级联动，全局唯一）：
+ * - days：时间范围（7/30/90）
+ * - tags：板块多选集合；空集合 = 「全部」（不过滤板块）；非空 = OR 命中
+ * - diff：难度单选；'ALL' = 全部（不过滤难度）；否则精确匹配档位
  */
-function computeStats(days, filter) {
-  const rs = records.filter(r =>
-    inRange(r, days) && (filter === 'ALL' || r.difficulty === filter)
+const FS = { days: 30, tags: new Set(), diff: 'ALL' };
+
+/** 依据 FS 过滤出记录（列表分页也基于此结果） */
+function applyFilters() {
+  return records.filter(r =>
+    inRange(r, FS.days) &&
+    (FS.diff === 'ALL' || r.difficulty === FS.diff) &&
+    (FS.tags.size === 0 ||
+      (Array.isArray(r.tags) && r.tags.some(t => FS.tags.has(t))))
   );
-  const total = rs.length;
-  const solved = rs.filter(r => r.solved).length;
-  // 按日期分组（用于趋势图：每日独立做出率）
-  const byDay = new Map(); // date -> {total, solved}
-  for (const r of rs) {
-    if (!byDay.has(r.date)) byDay.set(r.date, { total: 0, solved: 0 });
-    const d = byDay.get(r.date);
-    d.total++; if (r.solved) d.solved++;
+}
+
+/**
+ * 只按「难度 + 板块」过滤（不带时间范围）。
+ * 供需要展示长周期、且不应受上方时间范围按钮影响的模块使用（如日历热力图）。
+ */
+function applyCategoryFilters() {
+  return records.filter(r =>
+    (FS.diff === 'ALL' || r.difficulty === FS.diff) &&
+    (FS.tags.size === 0 ||
+      (Array.isArray(r.tags) && r.tags.some(t => FS.tags.has(t))))
+  );
+}
+
+/**
+ * 对已过滤的记录做聚合：
+ * @returns {{ list, total, solved, rate, byDay, madeAvg, thinkAvg }}
+ * byDay: Map(date → { total, solved, madeSum, madeN, thinkSum, thinkN })
+ *   made*：独立做出=是 且 有用时；think*：独立做出=否 且 有用时
+ */
+function aggregate(list) {
+  let total = 0, solved = 0, madeSum = 0, madeN = 0, thinkSum = 0, thinkN = 0;
+  const byDay = new Map();
+  for (const r of list) {
+    total++;
+    if (r.solved) solved++;
+    const m = r.mins; // null=未填，不参与用时统计
+    if (m != null && m >= 0) {
+      if (r.solved) { madeSum += m; madeN++; } else { thinkSum += m; thinkN++; }
+    }
+    let d = byDay.get(r.date);
+    if (!d) { d = { total: 0, solved: 0, madeSum: 0, madeN: 0, thinkSum: 0, thinkN: 0 }; byDay.set(r.date, d); }
+    d.total++;
+    if (r.solved) d.solved++;
+    if (m != null && m >= 0) {
+      if (r.solved) { d.madeSum += m; d.madeN++; } else { d.thinkSum += m; d.thinkN++; }
+    }
   }
-  return { total, solved, rate: pct(solved, total), byDay, rs };
+  return {
+    list, total, solved, rate: pct(solved, total),
+    byDay,
+    madeAvg: madeN ? madeSum / madeN : null,
+    thinkAvg: thinkN ? thinkSum / thinkN : null
+  };
+}
+
+/** 当前筛选组合下的记录（供所有统计模块使用） */
+function computeAgg() {
+  return aggregate(applyFilters());
 }
 
 /** 计算某难度分组/难度项的统计 */
@@ -487,10 +805,14 @@ function grpStats(list, pred) {
   return { total: rs.length, solved: rs.filter(r => r.solved).length };
 }
 
-/** 难度档位筛选的显示名（用于文案） */
-function filterLabel(f) {
-  return f === 'ALL' ? '全部难度段' : f;
+/** 筛选文案（用于各卡片口径说明） */
+function filterSummary() {
+  const t = { 7: '最近7天', 30: '最近30天', 90: '最近90天' }[FS.days] || (FS.days + '天');
+  const tg = FS.tags.size ? [...FS.tags].join(' / ') : '全部板块';
+  const df = FS.diff === 'ALL' ? '全部难度' : FS.diff;
+  return `${t} · 板块:${tg} · 难度:${df}`;
 }
+function filterLabel() { return filterSummary(); }
 
 /* ================================================================
  * 四、渲染：难度下拉框
@@ -502,25 +824,24 @@ function fillDifficultySelect() {
 
 /* ================================================================
  * 五、渲染：统计视图（总览卡片 / 分组表格）
- * 总览与分组表始终统计「当前时间范围」的全量记录（不随趋势图档位筛选变化），
- * 因为分组表本身已按 洛谷青 / CF 2000-2299… 逐档分列，可同时查看全部档位。
+ * 总览与分组表均基于「三级筛选」后的记录（FS 全局生效）。
  * ================================================================ */
-function renderStats(days) {
-  const st = computeStats(days, 'ALL');
+function renderStats() {
+  const st = computeAgg();   // 已按 FS 过滤并聚合
 
   // --- 总览卡片 ---
-  const fmtDays = { 7: '7 天', 30: '30 天', 90: '90 天' }[days];
+  const fmtDays = { 7: '7 天', 30: '30 天', 90: '90 天' }[FS.days] || (FS.days + '天');
   document.getElementById('stat-total').innerHTML = st.total + '<small> 题</small>';
   document.getElementById('stat-solved').innerHTML = st.solved + '<small> 题</small>';
   document.getElementById('stat-rate').textContent = st.rate === null ? '—' : st.rate + '%';
-  document.getElementById('stat-total-sub').textContent = '当前范围共做题 ' + st.total + ' 次';
+  document.getElementById('stat-total-sub').textContent = '筛选后共做题 ' + st.total + ' 次';
   document.getElementById('stat-solved-sub').textContent = '占比 ' + (st.total ? Math.round(st.solved / st.total * 100) : 0) + '%';
   document.getElementById('stat-rate-sub').textContent = '范围：最近' + fmtDays;
 
   // --- 按难度分组表格（洛谷 / CF / AT 三大组 + 各自档位行）---
   const tbody = document.querySelector('#group-table tbody');
   const tfoot = document.querySelector('#group-table tfoot');
-  const rs = st.rs;
+  const rs = st.list;
   let html = '';
 
   for (const g of GROUPS) {
@@ -549,7 +870,7 @@ function renderStats(days) {
   }
   tbody.innerHTML = html;
 
-  // 表尾合计行（全量口径）
+  // 表尾合计行（当前筛选口径下的合计）
   tfoot.innerHTML = `
     <tr>
       <td class="left">合计</td>
@@ -570,170 +891,379 @@ function rateCell(solved, total, color) {
 }
 
 /* ================================================================
- * 六、渲染：趋势折线图（Chart.js）
- *  - 横轴：范围内「有做题记录的天」
+ * 六、渲染：趋势折线图 / 用时趋势图 / 日历热力图（均受三级筛选 FS 影响）
+ *  - 独立率横轴：筛选范围内「有做题记录的天」
  *  - 每日独立做出率：该天 solved/total*100，无做题的天直接跳过（不画点）
  *  - 7 / 14 日移动平均：基于「有做题的天」的序列，窗口为最近 7 / 14 个有做题的天
- *    （窗口不足 7 / 14 时，用已有天数计算，即从第一天起就有均值）
  * ================================================================ */
-let rateChart = null; // 保存图表实例以便销毁重建
 
-function renderChart(days, filter) {
-  const st = computeStats(days, filter);
+/** 读取当前主题下的 CSS 变量（图表轴线/网格等需随明暗模式变化） */
+function cssVar(name) {
+  return (getComputedStyle(document.documentElement).getPropertyValue(name) || '').trim();
+}
+
+let rateChart = null;  // 独立率图实例
+let timeChart = null;  // 用时趋势图实例
+
+/** 独立做出率趋势（折线） */
+function renderChart() {
+  const st = computeAgg();                       // 三级筛选后的聚合
   const dates = Array.from(st.byDay.keys()).sort(); // 有记录的天，升序
 
   const box = document.getElementById('chart-box');
   const emptyEl = document.getElementById('chart-empty');
-  // 更新图表口径说明行
-  document.getElementById('chart-scope').innerHTML = filter === 'ALL'
-    ? '口径：汇总 <b>全部难度段</b>（洛谷+CF+AT）'
-    : '口径：仅「<b>' + filter + '</b>」档位，当天该档有做题才计点';
-  if (dates.length === 0) {          // 范围内没有任何做题天
+  document.getElementById('chart-scope').innerHTML = '口径：<b>' + escHtml(filterSummary()) + '</b>';
+  if (dates.length === 0) {
     box.style.display = 'none';
     emptyEl.style.display = 'flex';
-    emptyEl.innerHTML = `<span class="big">📭</span>
-      <span>最近 ${days} 天内「${filterLabel(filter)}」暂无做题记录，先去上面添加一条吧</span>`;
+    emptyEl.innerHTML = `<span class="big">📭</span><span>当前筛选条件下暂无做题记录</span>`;
     return;
   }
   box.style.display = 'block';
   emptyEl.style.display = 'none';
 
-  // 每日独立做出率（%），数组顺序与 dates 一致
+  // 每日独立做出率（%）
   const daily = dates.map(d => {
     const g = st.byDay.get(d);
     return g.total ? Math.round((g.solved / g.total) * 100) : null;
   });
-
-  // 移动平均：i 表示「第 i 个有做题的天」，
-  // ma(n, i) = 从 max(0, i-n+1) 到 i 的 daily 的算术平均（不足 n 用已有数据）
+  // 移动平均（窗口=最近 n 个有做题的天，不足 n 用已有数据）
   const ma = (n) => dates.map((_, i) => {
     const from = Math.max(0, i - n + 1);
     const seg = daily.slice(from, i + 1);
-    return Math.round(seg.reduce((a, b) => a + b, 0) / seg.length * 10) / 10; // 保留 1 位小数
+    return Math.round(seg.reduce((a, b) => a + b, 0) / seg.length * 10) / 10;
   });
-  const ma7 = ma(7);
-  const ma14 = ma(14);
+  const ma7 = ma(7), ma14 = ma(14);
 
-  // x 轴标签：显示 MM-DD；tooltip 标题里还原完整日期
-  const labels = dates.map(d => d.slice(5));
+  const labels = dates.map(d => d.slice(5));  // MM-DD
   const fullDates = dates;
-
-  // 销毁旧实例（避免重复创建导致叠加）
   if (rateChart) { rateChart.destroy(); rateChart = null; }
 
-  const ctx = document.getElementById('rate-chart').getContext('2d');
-  rateChart = new Chart(ctx, {
+  rateChart = new Chart(document.getElementById('rate-chart').getContext('2d'), {
     type: 'line',
     data: {
       labels,
       datasets: [
-        {
-          label: '每日独立做出率',
-          data: daily,
-          borderColor: '#4f46e5',
-          backgroundColor: 'rgba(79,70,229,.08)',
-          pointBackgroundColor: '#4f46e5',
-          pointRadius: 3.5,
-          pointHoverRadius: 5,
-          borderWidth: 2,
-          tension: 0.3,
-          fill: false
-        },
-        {
-          label: '7日移动平均',
-          data: ma7,
-          borderColor: '#f59e0b',
-          pointBackgroundColor: '#f59e0b',
-          pointRadius: 2.5,
-          borderWidth: 2.5,
-          borderDash: [1, 0],
-          tension: 0.3,
-          fill: false
-        },
-        {
-          label: '14日移动平均',
-          data: ma14,
-          borderColor: '#06b6d4',
-          pointBackgroundColor: '#06b6d4',
-          pointRadius: 2,
-          borderWidth: 2,
-          borderDash: [6, 4],
-          tension: 0.3,
-          fill: false
-        }
+        { label: '每日独立做出率', data: daily, borderColor: '#4f46e5',
+          pointBackgroundColor: '#4f46e5', pointRadius: 3.5, pointHoverRadius: 5,
+          borderWidth: 2, tension: 0.3, fill: false },
+        { label: '7日移动平均', data: ma7, borderColor: '#f59e0b',
+          pointBackgroundColor: '#f59e0b', pointRadius: 2.5, borderWidth: 2.5, tension: 0.3, fill: false },
+        { label: '14日移动平均', data: ma14, borderColor: '#06b6d4',
+          pointBackgroundColor: '#06b6d4', pointRadius: 2, borderWidth: 2, borderDash: [6, 4],
+          tension: 0.3, fill: false }
       ]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { position: 'top', labels: { boxWidth: 14, boxHeight: 3, usePointStyle: true, font: { size: 12 } } },
-        tooltip: {
-          callbacks: {
-            title: (items) => fullDates[items[0].dataIndex],   // 悬停时显示完整日期
-            label: (c) => ` ${c.dataset.label}: ${c.parsed.y}%`
-          }
-        }
+        legend: { position: 'top', labels: { boxWidth: 14, boxHeight: 3, usePointStyle: true, font: { size: 12 }, color: cssVar('--chart-legend') } },
+        tooltip: { callbacks: { title: (it) => fullDates[it[0].dataIndex], label: (c) => ` ${c.dataset.label}: ${c.parsed.y}%` } }
       },
       scales: {
-        x: {
-          grid: { display: false },
-          ticks: { color: '#64748b', maxRotation: 45, autoSkip: true, maxTicksLimit: 14, font: { size: 11 } }
-        },
-        y: {
-          min: 0, max: 100,
-          grid: { color: '#eef1f7' },
-          ticks: {
-            color: '#64748b', stepSize: 25, font: { size: 11 },
-            callback: v => v + '%'
-          }
-        }
+        x: { grid: { display: false }, ticks: { color: cssVar('--chart-tick'), maxRotation: 45, autoSkip: true, maxTicksLimit: 14, font: { size: 11 } } },
+        y: { min: 0, max: 100, grid: { color: cssVar('--chart-grid') },
+             ticks: { color: cssVar('--chart-tick'), stepSize: 25, font: { size: 11 }, callback: v => v + '%' } }
       }
     }
   });
 }
 
+/**
+ * 用时趋势（分钟）：两条线
+ *  - 每日平均做出时间：当天「独立做出=是 且 有用时」记录的用时均值（无样本则该点为空跳过）
+ *  - 每日平均思考时间：当天「独立做出=否 且 有用时」记录的用时均值（同上）
+ */
+function renderTimeChart() {
+  const st = computeAgg();
+  const dates = Array.from(st.byDay.keys()).sort();
+  const box = document.getElementById('chart-box2');
+  const emptyEl = document.getElementById('time-empty');
+  document.getElementById('time-scope').innerHTML =
+    '口径：<b>' + escHtml(filterSummary()) + '</b> · 蓝=独立做出口径（做出时间）均值，橙=未做出口径（思考时间）均值';
+
+  const madeVals = dates.map(d => {
+    const g = st.byDay.get(d);
+    return g.madeN ? Math.round((g.madeSum / g.madeN) * 10) / 10 : null;
+  });
+  const thinkVals = dates.map(d => {
+    const g = st.byDay.get(d);
+    return g.thinkN ? Math.round((g.thinkSum / g.thinkN) * 10) / 10 : null;
+  });
+
+  // 整个筛选范围内没有任何“带用时的记录” → 空态
+  if (st.madeAvg === null && st.thinkAvg === null) {
+    box.style.display = 'none';
+    emptyEl.style.display = 'flex';
+    emptyEl.innerHTML = `<span class="big">⏱️</span><span>当前筛选条件下没有带用时的记录（留空的用时不计入）</span>`;
+    if (timeChart) { timeChart.destroy(); timeChart = null; }
+    return;
+  }
+  box.style.display = 'block';
+  emptyEl.style.display = 'none';
+
+  const labels = dates.map(d => d.slice(5));
+  const fullDates = dates;
+  if (timeChart) { timeChart.destroy(); timeChart = null; }
+
+  timeChart = new Chart(document.getElementById('time-chart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: '每日平均做出时间', data: madeVals, borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,.08)', pointBackgroundColor: '#2563eb',
+          pointRadius: 3, borderWidth: 2, tension: 0.3, fill: false },
+        { label: '每日平均思考时间', data: thinkVals, borderColor: '#f59e0b',
+          backgroundColor: 'rgba(245,158,11,.08)', pointBackgroundColor: '#f59e0b',
+          pointRadius: 3, borderWidth: 2, tension: 0.3, borderDash: [6, 3], fill: false }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { boxWidth: 14, boxHeight: 3, usePointStyle: true, font: { size: 12 }, color: cssVar('--chart-legend') } },
+        tooltip: { callbacks: { title: (it) => fullDates[it[0].dataIndex], label: (c) => ` ${c.dataset.label}: ${c.parsed.y} 分钟` } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: cssVar('--chart-tick'), maxRotation: 45, autoSkip: true, maxTicksLimit: 14, font: { size: 11 } } },
+        y: { suggestedMin: 0, grid: { color: cssVar('--chart-grid') },
+             ticks: { color: cssVar('--chart-tick'), font: { size: 11 }, callback: v => v + ' 分' } }
+      }
+    }
+  });
+}
+
+/* ---------------- 日历热力图（GitHub 贡献图风格） ---------------- */
+let heatMetric = 'total'; // 'total'=每日做题数 | 'solved'=每日独立做出数
+let heatDays = 180;       // 热力图时段：不受上方时间范围筛选影响，默认 180 天
+const HEAT_ACCENT = { total: [14, 165, 233], solved: [16, 185, 129] }; // 蓝 / 绿
+
+/** 按数量给颜色：0 → 底色(var(--hm-track))；>0 → 主题色按比例加透明度 */
+function heatColor(v, max) {
+  if (!v) return 'var(--hm-track)';
+  const [r, g, b] = HEAT_ACCENT[heatMetric] || HEAT_ACCENT.total;
+  const a = 0.18 + 0.82 * Math.min(1, v / (max || 1));
+  return `rgba(${r},${g},${b},${a.toFixed(3)})`;
+}
+
+/** 日期字符串 → Date */
+function parseDate(s) { return new Date(s + 'T00:00:00'); }
+/** Date → YYYY-MM-DD */
+function fmtDate(d) {
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
+}
+
+function renderHeatmap() {
+  // 热力图聚合：仅按「难度 + 板块」过滤，不随上方时间范围按钮变化
+  const st = aggregate(applyCategoryFilters());
+  const today = todayStr();
+  const start = rangeStart(heatDays);
+
+  // 组装 [start, today] 每日数据（无记录的天为 0）
+  const cursor = parseDate(start);
+  const end = parseDate(today);
+  const days = [];
+  while (cursor <= end) {
+    const ds = fmtDate(cursor);
+    const g = st.byDay.get(ds);
+    days.push({ date: ds, total: g ? g.total : 0, solved: g ? g.solved : 0 });
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  // 颜色上限取当前指标的最大值（至少 1，避免除以 0）
+  const max = Math.max(1, ...days.map(d => d[heatMetric]));
+
+  // 周对齐：周一为一周起点；起点前的空位补透明格子
+  const startD = parseDate(start);
+  const dow0 = (startD.getDay() + 6) % 7; // Mon=0
+  const padded = [];
+  for (let i = 0; i < dow0; i++) padded.push(null);
+  days.forEach(d => padded.push(d));
+  const weeks = [];
+  for (let i = 0; i < padded.length; i += 7) weeks.push(padded.slice(i, i + 7));
+
+  // 月份标签：每个周的“周一”落在新月份时，在该周上方标注「N月」
+  const mondayBase = new Date(startD);
+  mondayBase.setDate(mondayBase.getDate() - dow0);
+  const monthMarks = [];
+  let lastMonth = -1;
+  for (let i = 0; i < weeks.length; i++) {
+    const mono = new Date(mondayBase);
+    mono.setDate(mondayBase.getDate() + i * 7);
+    if (mono.getMonth() !== lastMonth) { monthMarks.push((mono.getMonth() + 1) + '月'); lastMonth = mono.getMonth(); }
+    else monthMarks.push('');
+  }
+
+  // 长时段(≥1年)用紧凑格模式；其余用常规 13px 格
+  const el = document.getElementById('heatmap');
+  el.classList.toggle('hm-sm', heatDays >= 300);
+
+  // 左侧星期标签（对齐每行单元格）
+  const labels = ['', '一', '', '三', '', '五', ''];
+
+  const fmtTitle = (d) => `${d.date}：做题 ${d.total} 题${d.solved ? ' · 独立 ' + d.solved : ''}`;
+  const cellsHtml = (d) => {
+    if (!d) return `<div class="heat-cell" style="background:transparent"></div>`;
+    const v = d[heatMetric];
+    return `<div class="heat-cell" style="background:${heatColor(v, max)}" title="${fmtTitle(d)}"></div>`;
+  };
+
+  const rangeName = { 365: '1年', 180: '6月', 90: '3月', 30: '1月' }[heatDays] || (heatDays + '天');
+  document.getElementById('heat-tip').textContent =
+    `时段 ${start} ~ ${today}（最近 ${rangeName}，不受上方时间范围筛选影响；难度/板块筛选仍生效）；悬停查看每天明细`;
+
+  if (!days.length) {
+    el.innerHTML = `<div class="empty-state">暂无该范围内的数据</div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="heat-monthrow">${monthMarks.map(m => `<span>${m}</span>`).join('')}</div>
+    <div class="heat-flex">
+      <div class="heat-labels">${labels.map(l => `<span>${l}</span>`).join('')}</div>
+      ${weeks.map(w => `<div class="heat-week">${w.map(cellsHtml).join('')}</div>`).join('')}
+    </div>
+    <div class="heat-legend">
+      <span>少</span>
+      ${[0.18, 0.38, 0.55, 0.75, 1].map(a => {
+        const [r, g, b] = HEAT_ACCENT[heatMetric];
+        return `<span class="sw" style="background:rgba(${r},${g},${b},${a})"></span>`;
+      }).join('')}
+      <span>多</span>
+    </div>`;
+}
+
+/* ---------------- 主题：白天 / 夜间 ---------------- */
+function themeIcon(theme) { return theme === 'dark' ? '☀️' : '🌙'; }
+function applyTheme(theme, persist) {
+  if (theme !== 'dark' && theme !== 'light') theme = 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  const b = document.getElementById('theme-btn');
+  if (b) b.textContent = themeIcon(theme);
+  if (persist) { try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* 忽略 */ } }
+}
+function initTheme() {
+  let t = 'light';
+  try { t = localStorage.getItem(THEME_KEY) || 'light'; } catch (e) { /* 忽略 */ }
+  applyTheme(t, false);
+}
+
 /* ================================================================
- * 七、渲染：记录列表（全部记录，最新添加 / 最晚日期在前）
+ * 七、渲染：记录列表（全部记录，最新添加 / 最晚日期在前，每页 20 条分页）
+ * 注意：分页只作用于列表展示，不参与统计/趋势/分组表计算。
  * ================================================================ */
+/** HTML 转义：题号为用户输入文本，渲染到 innerHTML 前必须转义，防注入/破版 */
+function escHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/** 记录对象 → 题号显示文本；旧数据/导入的旧备份可能没有 pid，视为空 */
+function pidOf(r) {
+  const v = r.pid;
+  return (typeof v === 'string' ? v.trim() : (v == null ? '' : String(v).trim()));
+}
+
+/** 更新分页控件（显隐 / 页码文本 / 按钮禁用态），recordsPage 保持为当前渲染的页码 */
+function renderPager(totalPages) {
+  const pager = document.getElementById('list-pager');
+  const info = document.getElementById('pg-info');
+  if (totalPages <= 1) {          // 不超过一页：隐藏分页控件
+    pager.hidden = true;
+    return;
+  }
+  pager.hidden = false;
+  info.textContent = `第 ${recordsPage} / ${totalPages} 页`;
+  pager.querySelector('[data-nav="prev"]').disabled = recordsPage <= 1;
+  pager.querySelector('[data-nav="next"]').disabled = recordsPage >= totalPages;
+}
+
 function renderList() {
+  // 列表数据源 = 三级筛选后的记录（分页也基于筛选结果）
+  const filtered = applyFilters();
   // 排序：日期降序，同日期的后添加的在前
-  const sorted = records
+  const sorted = filtered
     .map((r, i) => ({ r, i }))
     .sort((a, b) => b.r.date.localeCompare(a.r.date) || b.i - a.i)
     .map(x => x.r);
 
-  document.getElementById('list-meta').textContent =
-    records.length ? `共 ${records.length} 条记录，最近一条在上方` : '';
+  // 分页：若删除/重置后当前页超出总页数，自动回退到最后一页
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  if (recordsPage > totalPages) recordsPage = totalPages;
+  if (recordsPage < 1) recordsPage = 1;
 
   const box = document.getElementById('records');
-  if (!sorted.length) {
+
+  // 空态区分：完全没有记录 / 有记录但被筛选条件滤掉
+  if (!records.length) {
+    document.getElementById('list-meta').textContent = '';
     box.innerHTML = `<div class="empty-state"><span class="big">📝</span>还没有任何记录，添加第一条开始追踪吧！</div>`;
+    renderPager(1);
     return;
   }
+  if (!sorted.length) {
+    document.getElementById('list-meta').textContent =
+      `共 ${records.length} 条记录，当前筛选条件下符合 ${filterSummary()} 的记录为 0 条`;
+    box.innerHTML = `<div class="empty-state"><span class="big">🔍</span>当前筛选条件下没有符合条件的记录，请调整筛选。</div>`;
+    renderPager(1);
+    return;
+  }
+
+  document.getElementById('list-meta').textContent =
+    `共 ${records.length} 条记录 · 当前筛选后 ${sorted.length} 条 · 每页 ${PAGE_SIZE} 条`;
 
   // 难度分组 → 对应的 CSS class（chip 颜色）
   const chipCls = (d) => GROUPS.find(g => d.startsWith(g.prefix)).chip;
 
-  box.innerHTML = sorted.map(r => {
+  // 只取当前页的数据
+  const start = (recordsPage - 1) * PAGE_SIZE;
+  const pageRows = sorted.slice(start, start + PAGE_SIZE);
+
+  box.innerHTML = pageRows.map(r => {
     const solved = !!r.solved;
+    const pid = pidOf(r);
+    // 题号：有则显示在日期之后（等宽字体标签）；无则留空不显示
+    const pidHtml = pid
+      ? `<span class="rec-pid" title="题号：${escHtml(pid)}">${escHtml(pid)}</span>`
+      : '';
+    // 板块：多板块以「, 」连接显示；未标注（空数组）显示灰色提示
+    const tags = Array.isArray(r.tags) ? r.tags : [];
+    const tagsHtml = tags.length
+      ? `<span class="rec-tags" title="板块：${escHtml(tags.join(', '))}">${escHtml(tags.join(', '))}</span>`
+      : `<span class="rec-tags none">未标板块</span>`;
+    // 用时：整数分钟；无则省略（留空不参与统计）
+    const minsHtml = r.mins != null
+      ? `<span class="rec-mins" title="${solved ? '做出时间' : '思考时间'}">⏱ ${r.mins} 分钟</span>`
+      : '';
     return `
-      <div class="rec" data-id="${r.id}">
+      <div class="rec" data-id="${escHtml(r.id)}">
         <span class="rec-date">${r.date}</span>
+        ${pidHtml}
+        ${tagsHtml}
         <span class="chip ${chipCls(r.difficulty)}">${r.difficulty}</span>
-        <span class="rec-diff">${solved ? '完全独立做出' : '未做出 / 借助帮助'}</span>
-        <span class="solved ${solved ? 'yes' : 'no'}">${solved ? '✔ 是' : '✘ 否'}</span>
-        <button class="del-btn" title="删除此条记录" data-del="${r.id}">🗑</button>
+        <span class="solved ${solved ? 'yes' : 'no'}">${solved ? '✔ 独立做出' : '✘ 未做出'}</span>
+        ${minsHtml}
+        <button class="del-btn" title="删除此条记录" data-del="${escHtml(r.id)}">🗑</button>
       </div>`;
   }).join('');
+
+  renderPager(totalPages);
 }
 
 /* ================================================================
  * 八、事件绑定
+ * 说明：三级筛选状态统一由 FS（时间/板块多选 OR/难度）管理，
+ *       旧版的 currentDays / currentFilter（单档位趋势筛选）已并入 FS。
  * ================================================================ */
-let currentDays = 30;      // 当前时间范围（天）
-let currentFilter = 'ALL'; // 当前趋势图难度档位：'ALL' = 全部；否则为具体档位（如 '洛谷青'）
+
+// 表单「板块」多选的临时选择集（提交后写入记录，清空与否见提交逻辑）
+let formTags = new Set();
 
 /* ------------------------------------------------------------------
  * 2.6 自绘确认弹窗 / 轻提示
@@ -778,26 +1308,59 @@ function showToast(msg, ms) {
 }
 
 /**
- * 依据 GROUPS 生成难度档位下拉框：
- * 选项 = 全部 + 洛谷 4 档 + CF 5 档 + AT 5 档（optgroup 分组显示，值 = 档位全名）
+ * 生成筛选区「难度」下拉（#f-diff）：全部 + 按平台分组的 14 个档位
  */
-function buildFilterSeg() {
-  const seg = document.getElementById('filter-seg');
-  const esc = (s) => s; // 档位名称为受控常量，无注入风险
-  seg.innerHTML =
-    '<option value="ALL">全部难度段（汇总）</option>' +
+function buildDiffFilterSelect() {
+  const sel = document.getElementById('f-diff');
+  sel.innerHTML =
+    '<option value="ALL">全部难度</option>' +
     GROUPS.map(g =>
       `<optgroup label="${g.name}">` +
-      g.bands.map(b => `<option value="${esc(b)}">${b}</option>`).join('') +
+      g.bands.map(b => `<option value="${b}">${b}</option>`).join('') +
       '</optgroup>'
     ).join('');
 }
 
-// 全局重绘：统计、表格、图表、列表一起刷新
+/** 生成筛选区「板块」多选 chips（含“全部”），选项与 FS.tags 双向同步 */
+function buildFilterTags() {
+  const box = document.getElementById('f-tags');
+  box.innerHTML =
+    '<button type="button" class="fchip" data-tag="ALL">全部</button>' +
+    TAGS.map(t => `<button type="button" class="fchip" data-tag="${t}">${t}</button>`).join('');
+  syncFilterTagsUI();
+}
+/** 依据 FS.tags 刷新筛选 chips 的选中态（“全部”仅在集合为空时高亮） */
+function syncFilterTagsUI() {
+  document.querySelectorAll('#f-tags .fchip').forEach(ch => {
+    const t = ch.getAttribute('data-tag');
+    ch.classList.toggle('on', t === 'ALL' ? FS.tags.size === 0 : FS.tags.has(t));
+  });
+}
+
+/** 生成录入表单里的「板块」多选 chips */
+function buildTagPickForm() {
+  const box = document.getElementById('tagpick');
+  box.innerHTML = TAGS.map(t => `<button type="button" class="tag-opt" data-tag="${t}">${t}</button>`).join('');
+  // 事件委托：点击切换选中并更新 formTags
+  box.addEventListener('click', (e) => {
+    const b = e.target.closest('.tag-opt[data-tag]');
+    if (!b) return;
+    const t = b.getAttribute('data-tag');
+    if (formTags.has(t)) { formTags.delete(t); b.classList.remove('on'); }
+    else { formTags.add(t); b.classList.add('on'); }
+  });
+}
+
+// 全局重绘：所有受三级筛选影响的视图一起刷新
 function refresh() {
-  renderStats(currentDays);             // 总览/分组表 = 时间范围全量
-  renderChart(currentDays, currentFilter); // 趋势图跟随档位筛选
-  renderList();
+  // 筛选摘要（右上角）
+  const sumEl = document.getElementById('filter-summary');
+  if (sumEl) sumEl.textContent = '当前：' + filterSummary() + '（以下所有统计与图表均基于该组合）';
+  renderStats();         // 总览卡片 + 难度分组表
+  renderChart();         // 独立做出率趋势
+  renderTimeChart();     // 用时趋势
+  renderHeatmap();       // 日历热力图
+  renderList();          // 全部记录（筛选后 + 分页）
 }
 
 // 1) 添加记录
@@ -805,14 +1368,33 @@ document.getElementById('btn-add').addEventListener('click', () => {
   const date = document.getElementById('inp-date').value;
   const diff = document.getElementById('inp-diff').value;
   const solved = document.querySelector('input[name="solved"]:checked').value === '1';
+  const pid = document.getElementById('inp-pid').value.trim(); // 题号：可选，去首尾空格
+
+  // 用时（分钟）：允许留空；填写则必须是 >=0 的整数
+  let mins = null;
+  const minsRaw = document.getElementById('inp-mins').value.trim();
+  if (minsRaw !== '') {
+    const n = Number(minsRaw);
+    if (!Number.isInteger(n) || n < 0 || n > 99999) {
+      showToast('用时需为 0~99999 的整数分钟，或留空');
+      return;
+    }
+    mins = n;
+  }
 
   if (!date) { showToast('请先选择日期'); return; }
   if (!DIFFICULTIES.includes(diff)) { showToast('请选择有效的难度档位'); return; }
 
-  records.push({ id: genId(), date, difficulty: diff, solved });
+  // 板块以数组存储；未选则为空数组（导入旧数据时才会按需求补默认板块）
+  const tags = Array.from(formTags);
+  records.push({ id: genId(), date, difficulty: diff, solved, pid, tags, mins });
   saveRecords();
+  recordsPage = 1;   // 新记录展示在首页（列表按日期倒序排在最前）
   refresh();
-  showToast(`已保存：${date} · ${diff} · ${solved ? '独立做出' : '未做出/借助帮助'}`);
+  const pidTip = pid ? ` · 题号 ${pid}` : '';
+  const tagTip = tags.length ? ` · 板块 ${tags.join(',')}` : '';
+  const minsTip = mins != null ? ` · ${solved ? '做出' : '思考'} ${mins} 分钟` : '';
+  showToast(`已保存：${date} · ${diff}${pidTip}${tagTip}${minsTip} · ${solved ? '独立做出' : '未做出/借助帮助'}`);
 });
 
 // 2) 删除记录（事件委托：列表动态生成，统一挂载在容器上）
@@ -825,31 +1407,94 @@ document.getElementById('records').addEventListener('click', async (e) => {
 
   const ok = await askConfirm(
     `确定删除这条记录吗？删除后<b>不可恢复</b>。<br>` +
-    `📅 ${rec.date} · ${rec.difficulty} · ${rec.solved ? '✔ 独立做出' : '✘ 未做出/借助帮助'}`,
+    `📅 ${rec.date} · ${rec.difficulty}${pidOf(rec) ? ' · ' + escHtml(pidOf(rec)) : ''}` +
+    `${Array.isArray(rec.tags) && rec.tags.length ? ' · 板块 ' + escHtml(rec.tags.join(',')) : ''}` +
+    `${rec.mins != null ? ' · 用时 ' + rec.mins + ' 分钟' : ''}` +
+    ` · ${rec.solved ? '✔ 独立做出' : '✘ 未做出/借助帮助'}`,
     '删除'
   );
   if (!ok) return;
 
   records = records.filter(r => r.id !== id);
   saveRecords();
-  refresh();
+  refresh();       // renderList 内会对 recordsPage 做越界钳制
   showToast('已删除 1 条记录');
 });
 
-// 3) 时间范围切换
+// 2.5) 记录列表分页切换（上一页 / 下一页；只重绘列表，不影响统计与图表）
+document.getElementById('list-pager').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-nav]');
+  if (!btn) return;
+  if (btn.disabled) return;
+  const nav = btn.getAttribute('data-nav');
+  // 页数基于「筛选后」的记录数（与 renderList 口径一致）
+  const totalPages = Math.max(1, Math.ceil(applyFilters().length / PAGE_SIZE));
+  if (nav === 'prev' && recordsPage > 1) recordsPage--;
+  if (nav === 'next' && recordsPage < totalPages) recordsPage++;
+  renderList();
+});
+
+// 3) 时间范围切换 → FS.days
 document.getElementById('range-seg').addEventListener('click', (e) => {
   const btn = e.target.closest('button[data-days]');
   if (!btn) return;
   document.querySelectorAll('#range-seg button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  currentDays = parseInt(btn.getAttribute('data-days'), 10);
+  FS.days = parseInt(btn.getAttribute('data-days'), 10);
+  recordsPage = 1; // 范围变化后列表回到第一页
   refresh();
 });
 
-// 3.5) 趋势图难度档位切换（change 事件）：只重绘趋势图与其口径说明
-document.getElementById('filter-seg').addEventListener('change', (e) => {
-  currentFilter = e.target.value; // 'ALL' 或具体档位全名
-  renderChart(currentDays, currentFilter);
+// 3.1) 板块多选筛选（OR 逻辑；点「全部」= 清空集合 → 不过滤板块）
+document.getElementById('f-tags').addEventListener('click', (e) => {
+  const b = e.target.closest('.fchip[data-tag]');
+  if (!b) return;
+  const t = b.getAttribute('data-tag');
+  if (t === 'ALL') {
+    FS.tags.clear();
+  } else if (FS.tags.has(t)) {
+    FS.tags.delete(t);
+  } else {
+    FS.tags.add(t);
+  }
+  syncFilterTagsUI();
+  recordsPage = 1;
+  refresh();
+});
+
+// 3.2) 难度筛选（单选，change 事件）
+document.getElementById('f-diff').addEventListener('change', (e) => {
+  FS.diff = e.target.value; // 'ALL' 或具体档位全名
+  recordsPage = 1;
+  refresh();
+});
+
+// 3.3) 热力图时段切换（1月/3月/6月/1年，独立于上方时间筛选）
+document.getElementById('heat-range').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-days]');
+  if (!btn) return;
+  document.querySelectorAll('#heat-range button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  heatDays = parseInt(btn.getAttribute('data-days'), 10);
+  renderHeatmap();
+});
+
+// 3.4) 热力图指标切换（每日做题数 / 独立做出数）
+document.getElementById('heat-tabs').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-metric]');
+  if (!btn) return;
+  document.querySelectorAll('#heat-tabs button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  heatMetric = btn.getAttribute('data-metric');
+  renderHeatmap();
+});
+
+// 3.4) 主题切换（夜间 / 白天），持久化到 localStorage 并重绘图表取色
+document.getElementById('theme-btn').addEventListener('click', () => {
+  const cur = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark' ? 'dark' : 'light';
+  applyTheme(cur === 'dark' ? 'light' : 'dark', true);
+  refresh(); // 重建图表/热力图，让轴线与网格按新主题取色
+  showToast(cur === 'dark' ? '已切换到白天模式' : '已切换到夜间模式');
 });
 
 // 3.6) 数据重置：删除最近 N 天（含今天）的全部记录，用于性能测试后快速清场
@@ -881,9 +1526,15 @@ document.getElementById('btn-export').addEventListener('click', () => {
   // （若个别环境下该键不存在，则回退到内存中的 records 数组）
   let data = null;
   try { data = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { data = null; }
-  const list = Array.isArray(data) ? data : records;
+  const raw = Array.isArray(data) ? data : records;
 
-  if (!list.length) { showToast('暂无数据可导出'); return; }
+  if (!raw.length) { showToast('暂无数据可导出'); return; }
+
+  // 导出前补全新字段（板块缺失→默认、用时缺失→空），确保导出文件字段完整、再导入也一致
+  const list = raw.map(r => (r.tags === undefined || r.mins === undefined)
+    ? { ...r, tags: r.tags === undefined ? DEFAULT_TAGS.slice() : normTags(r.tags),
+         mins: r.mins === undefined ? null : normMins(r.mins) }
+    : r);
 
   // 生成 JSON 文本（缩进 2 格便于人工阅读 / 二次编辑）
   const blob = new Blob([JSON.stringify(list, null, 2)],
@@ -921,11 +1572,12 @@ document.getElementById('file-import').addEventListener('change', (e) => {
       return;
     }
 
-    // 2) 结构清洗 + 补全：只保留合法记录条目（规则与 loadRecords 一致），
-    //    缺失 id 的条目自动补一个，避免删除等操作按 id 失效
+    // 2) 结构清洗 + 归一化（与 loadRecords 同一套规则）：
+    //    旧备份缺失板块 tags → 默认 ["构造/思维/其他"]；缺失用时 mins → 空（不参与统计）；
+    //    缺失 id 自动补；pid 缺失视为空串 —— 全程兼容旧文件，不报错
     const clean = parsed
       .filter(r => r && r.date && r.difficulty && r.solved !== undefined)
-      .map(r => ({ id: r.id || genId(), date: r.date, difficulty: r.difficulty, solved: !!r.solved }));
+      .map(normalizeRecord);
 
     // 3) 整体覆盖写入 localStorage（与导出的键名相同：STORAGE_KEY）
     try {
@@ -955,10 +1607,13 @@ document.addEventListener('keydown', (e) => {
  * 九、初始化
  * ================================================================ */
 (function init() {
+  initTheme();                  // 白天/夜间（读 localStorage，默认白天）
   document.getElementById('inp-date').value = todayStr(); // 日期默认今天
-  fillDifficultySelect();   // 填充难度下拉框（16 档）
-  buildFilterSeg();         // 生成趋势图档位下拉
-  refresh();                // 首次全量渲染
+  fillDifficultySelect();       // 表单难度下拉（14 档）
+  buildDiffFilterSelect();      // 筛选区难度下拉（全部 + 14 档）
+  buildFilterTags();            // 筛选区板块多选 chips
+  buildTagPickForm();           // 表单板块多选 chips
+  refresh();                    // 首次全量渲染（总览/图表/热力图/列表）
 })();
 </script>
 </body>
